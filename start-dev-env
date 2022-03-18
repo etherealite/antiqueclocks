@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+
+function wpcli() {
+    wp --allow-root "$@"
+}
+
+
+if ! grep -qs '/usr/src ' /proc/mounts; then
+    bindfs \
+        --force-user=www-data \
+        --force-group=www-data \
+        --chgrp-ignore \
+        --chown-ignore \
+        --chmod-ignore  \
+        --create-for-user="$HOST_UID" \
+        --create-for-group="$HOST_UID" \
+        /host/src /usr/src/
+fi
+
+
+if [[ true ]]; then
+    rsync \
+        --recursive \
+        --times \
+        /usr/local/src/wordpress/* \
+        /usr/src/wordpress;
+fi
+
+
+if ! wpcli core is-installed; then
+    wpcli core install \
+        --path=/usr/src/wordpress \
+        --url="https://localhost:$WORDPRESS_PORT" \
+        --title='Antique Clocks Identification & Price Guide' \
+        --admin_user='admin.dev' \
+        --admin_password='admin.dev' \
+        --admin_email='admin.dev@fake.com' 
+fi
+
+sleep infinity
+

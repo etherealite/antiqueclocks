@@ -1,0 +1,15 @@
+.env
+vendor
+wordpress/*
+!wordpress/wp-config.php
+!wordpress/wp-config-dev.php
+!wordpress/wp-content
+wordpress/wp-content/*
+!wordpress/wp-content/install.php
+!wordpress/wp-content/mu-plugins
+wordpress/wp-content/mu-plugins/*
+!wordpress/wp-content/mu-plugins/antiqueclocks
+!wordpress/wp-content/mu-plugins/bedrock-autoloader.php
+!wordpress/wp-content/themes
+wordpress/wp-content/themes/*
+!wordpress/wp-content/themes/antiqueclocks

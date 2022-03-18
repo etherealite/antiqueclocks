@@ -1,0 +1,39 @@
+version: '3.8'
+
+services: 
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev-env
+    environment:
+      HOST_USER: "${USER}"
+      HOST_UID: "${HOST_UID:-1000}"
+      WORDPRESS_DB_HOST: "${WORDPRESS_DB_HOST:-db}"
+      WORDPRESS_DB_USER: "${WORDPRESS_DB_USER:-wordpress}"
+      WORDPRESS_DB_PASSWORD: "${WORDPRESS_DB_PASSWORD:-wordpress}"
+      WORDPRESS_DB_NAME: "${WORDPRESS_DB_NAME:-wordpress}"
+      WP_ENVIRONMENT_TYPE: "${WP_ENVIRONMENT_TYPE:-development}"
+      WORDPRESS_PORT: "${WORDPRESS_PORT:-8085}"
+      WORDPRESS_SSL_PORT: "${WORDPRESS_SSL_PORT:-8443}"
+    volumes:
+      - .:/host/src
+      - ./start-dev-env:/usr/local/bin/start-dev-env
+      - ssl-certs:/usr/local/etc/certs
+    cap_add:
+        - SYS_ADMIN
+    devices:
+        - /dev/fuse
+  db:
+    image: mariadb:latest
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: "${WORDPRESS_DB_NAME:-wordpress}"
+      MYSQL_USER: "${WORDPRESS_DB_USER:-wordpress}"
+      MYSQL_PASSWORD: "${WORDPRESS_DB_PASSWORD:-wordpress}"
+  
+volumes:
+  mariadb-data:
+  ssl-certs:
