@@ -2,8 +2,11 @@ version: '3.8'
 
 services: 
   wordpress:
+    volumes:
+    - ./.devcontainer/start-apache:/usr/local/bin/start-apache
+
     # Overrides default command so things don't shut down after the process ends.
-    command: start-dev-env
+    command: start-dev-env && sleep infinity
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     network_mode: service:db
 
@@ -12,7 +15,7 @@ services:
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
-
+    
   db:
     restart: unless-stopped
     ports:

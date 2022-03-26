@@ -13,37 +13,53 @@
           "type": "composer",
           "url": "https://wpackagist.org",
           "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/etherealite/disable-comments-mu",
-            "no-api": true
         }
     ],
+    "autoload": {
+        "psr-4": {
+          "Curios\\": "wordpress/wp-content/mu-plugins/curios/src/"
+        },
+        "files": ["wordpress/wp-content/mu-plugins/curios/src/on_autoload.php"]
+      },
     "require": {
         "php": ">=7.4",
         "composer/installers": "^2.0",
-        "solarissmoke/disable-comments-mu": "dev-master",
         "wpackagist-theme/generatepress": "^3.1",
-        "roots/bedrock-autoloader": "^1.0"
+        "pimple/pimple": "^3.5",
+        "psr/container": "^2.0",
+        "bueltge/remove-comments-absolutely": "^1.5",
+        "roots/bedrock-autoloader": "^1.0",
+        "monolog/monolog": "^2.4"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "squizlabs/php_codesniffer": "^3.6.2"
+        "squizlabs/php_codesniffer": "^3.6.2",
+        "phpunit/phpunit": "^9.5",
+        "wp-phpunit/wp-phpunit": "^5.9",
+        "yoast/phpunit-polyfills": "^1.0",
+        "bamarni/composer-bin-plugin": "^1.5",
+        "php-stubs/wordpress-stubs": "^5.9"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "allow-plugins": {
-          "composer/installers": true
+            "composer/installers": true,
+            "bamarni/composer-bin-plugin": true
         },
         "vendor-dir": "vendor"
       },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
+        "bamarni-bin": {
+            "forward-command": true
+        },
         "installer-paths": {
-            "wordpress/wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+            "wordpress/wp-content/mu-plugins/{$name}/": [
+                "type:wordpress-muplugin",
+                "bueltge/remove-comments-absolutely"
+            ],
             "wordpress/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
             "wordpress/wp-content/themes/{$name}/": ["type:wordpress-theme"]
         }

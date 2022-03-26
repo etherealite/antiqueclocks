@@ -1,5 +1,7 @@
 .env
-vendor
+/temp
+/vendor-bin/**/vendor
+/vendor
 wordpress/*
 !wordpress/wp-config.php
 !wordpress/wp-config-dev.php
@@ -8,8 +10,9 @@ wordpress/wp-content/*
 !wordpress/wp-content/install.php
 !wordpress/wp-content/mu-plugins
 wordpress/wp-content/mu-plugins/*
-!wordpress/wp-content/mu-plugins/antiqueclocks
+!wordpress/wp-content/mu-plugins/curios
 !wordpress/wp-content/mu-plugins/bedrock-autoloader.php
+!wordpress/wp-content/mu-plugins/env-compatibility.php
 !wordpress/wp-content/themes
 wordpress/wp-content/themes/*
 !wordpress/wp-content/themes/antiqueclocks

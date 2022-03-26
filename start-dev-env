@@ -1,9 +1,15 @@
 #!/bin/bash
-set -e
+set -eux
 
 function wpcli() {
     wp --allow-root "$@"
 }
+
+maria_args=(
+    "--password=$MYSQL_ROOT_PASSWORD"
+    "--host=$WORDPRESS_DB_HOST"
+    "--user=root"
+)
 
 
 if ! grep -qs '/usr/src ' /proc/mounts; then
@@ -12,31 +18,34 @@ if ! grep -qs '/usr/src ' /proc/mounts; then
         --force-group=www-data \
         --chgrp-ignore \
         --chown-ignore \
-        --chmod-ignore  \
         --create-for-user="$HOST_UID" \
         --create-for-group="$HOST_UID" \
+        --multithreaded \
         /host/src /usr/src/
 fi
 
+rsync \
+    --recursive \
+    --times \
+    /usr/local/src/wordpress/* \
+    /usr/src/wordpress;
 
-if [[ true ]]; then
-    rsync \
-        --recursive \
-        --times \
-        /usr/local/src/wordpress/* \
-        /usr/src/wordpress;
-fi
+mariadb ${maria_args[@]} <<-EOSQL 
+    CREATE DATABASE IF NOT EXISTS \`${WP_PHPUNIT_DB_NAME}\` ;
+    GRANT ALL ON \`${WP_PHPUNIT_DB_NAME//_/\\_}\`.* TO '$WORDPRESS_DB_USER'@'%' ;
+EOSQL
 
-
-if ! wpcli core is-installed; then
+if ! wpcli core is-installed --path=/usr/src/wordpress; then
     wpcli core install \
         --path=/usr/src/wordpress \
-        --url="https://localhost:$WORDPRESS_PORT" \
+        --url="https://localhost:8080" \
         --title='Antique Clocks Identification & Price Guide' \
         --admin_user='admin.dev' \
         --admin_password='admin.dev' \
         --admin_email='admin.dev@fake.com' 
 fi
+
+
 
 sleep infinity
 

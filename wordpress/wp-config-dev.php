@@ -16,3 +16,7 @@ if (! defined('WP_HOME')) {
 if (! defined('WP_SITEURL')) {
     define('WP_SITEURL', $site_url);
 }
+
+define('WP_DEBUG', true);
+
+ini_set('assert.exception', 1);

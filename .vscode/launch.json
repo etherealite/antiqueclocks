@@ -9,6 +9,7 @@
             "type": "php",
             "request": "launch",
             "port": 9003,
+            "maxConnections": 1
         },
         {
             "name": "Launch currently open script",

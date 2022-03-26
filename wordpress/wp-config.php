@@ -8,41 +8,20 @@ if ($envType === "local" || $envType === "development") {
     }
 }
 
-// if (getenv(MYSQLI_CLIENT_SSL)) {
-// 	define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
-// }
+if (getenv('WORDPRESS_MYSQL_SSL')) {
+	define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
+}
     
-define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
 
 if (! defined('WP_DEFAULT_THEME')) {
     define('WP_DEFAULT_THEME', 'antiqueclocks');
 }
 
-
-
-require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-
+require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
 /**
- * The base configuration for WordPress
+ * Copied from the official WordPress docker image wp-config-docker.php 
  *
- * The wp-config.php creation script uses this file during the installation.
- * You don't have to use the web site, you can copy this file to "wp-config.php"
- * and fill in the values.
- *
- * This file contains the following configurations:
- *
- * * Database settings
- * * Secret keys
- * * Database table prefix
- * * ABSPATH
- *
- * This has been slightly modified (to read environment variables) for use in Docker.
- *
- * @link https://wordpress.org/support/article/editing-wp-config-php/
- *
- * @package WordPress
  */
 
 // IMPORTANT: this file needs to stay in-sync with https://github.com/WordPress/WordPress/blob/master/wp-config-sample.php

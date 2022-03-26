@@ -1,0 +1,5 @@
+# Set the default behavior to force lf.
+text eol=lf
+
+composer.lock binary
+vendor-bin/**/composer.lock binary

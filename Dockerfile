@@ -41,6 +41,10 @@ RUN set -eux; \
 # local development environment image
 FROM build-deps as dev-env
 
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
+
 ARG package_list="apt-utils \
         openssh-client \
         gnupg2 \
@@ -89,6 +93,12 @@ RUN set -eux; \
 		bindfs ${package_list} \
 	; \
     rm -rf /var/lib/apt/lists/*; \
+    # fix the shell environment
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; \
+    locale-gen; \
+    update-locale LANG=en_US.UTF-8; \
+    echo 'America/Los_Angeles' > /etc/timezone; \
+    dpkg-reconfigure -f noninteractive tzdata; \
     # install and configure xdebug
     pecl install xdebug; \
     docker-php-ext-enable xdebug; \
@@ -98,7 +108,13 @@ RUN set -eux; \
         echo 'xdebug.mode=debug'; \
         echo 'xdebug.start_with_request=yes'; \
         echo 'xdebug.connect_timeout_ms=60'; \
+        echo 'xdebug.log_level=0'; \
     } >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    # set php error handling for development use
+    { \
+        echo 'zend.assertions=1'; \
+        echo 'assert.exception=1'; \
+    } >> /usr/local/etc/php/conf.d/error-logging.ini; \
     # let www-data be a login shell
     mkdir -p /home/www-data && chown www-data:www-data /home/www-data; \
     usermod --shell /bin/bash -d /home/www-data www-data; \
@@ -124,7 +140,16 @@ RUN set -eux; \
     ; \
     a2enmod ssl && a2ensite default-ssl.conf;
 
+# Augment the development user accounts shell
+USER www-data
 
+RUN set -eux; \
+    git clone --depth 1 https://github.com/Bash-it/bash-it.git  /home/www-data/.bash_it; \
+    /home/www-data/.bash_it/install.sh --silent;
+
+USER root
+
+# Keep the container running so we can start services in user space
 CMD sleep infinity;
 
 
@@ -137,7 +162,8 @@ COPY . /usr/build
 RUN set -eux; \
     cd /usr/build; \
     git clean -f -d -X ./; \
-    composer install
+    rm -rf .git; \
+    composer install -n --no-ansi --no-dev --classmap-authoritative;
 
 
 
@@ -145,5 +171,11 @@ RUN set -eux; \
 FROM shared as production
 
 COPY --chown=www-data:www-data --from=builder /usr/build /usr/src
+
+RUN set -eux; \
+    cd /usr/src; \
+    mkdir wordpress/wp-content/wp-uploads; \
+    chmod -R a=rX,a-w *; \
+    chmod 754 wordpress/wp-content/wp-uploads;
 
 CMD apache2-foreground
