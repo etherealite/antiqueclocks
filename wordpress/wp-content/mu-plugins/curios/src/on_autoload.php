@@ -1,5 +1,4 @@
-<?
-
+<?php
 /**
  * Handle early loading of the plugin classes
  * 

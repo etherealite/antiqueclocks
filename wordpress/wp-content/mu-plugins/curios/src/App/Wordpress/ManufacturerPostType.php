@@ -3,10 +3,10 @@ namespace Curios\App\Wordpress;
 
 use Curios\Wordpress\CustomPostType;
 
-class CollectablePostType extends CustomPostType {
+class ManufacturerPostType extends CustomPostType {
 
     public static function slug(): string {
-        return 'curios_collectable';
+        return 'curios_manufacturer';
     }
 
     public function register(): void 
@@ -14,11 +14,11 @@ class CollectablePostType extends CustomPostType {
         $slug = $this::slug();
         $labels = [];
         $args = [
-            'label'                 => __( 'Collectable', 'curios' ),
-            'description'           => __( 'A collectable item', 'curios' ),
+            'label'                 => __( 'Manufacturer', 'curios' ),
+            'description'           => __( 'A Manufacturer item', 'curios' ),
             'labels'                => $labels,
-            'supports'              => array('title', 'editor', 'thumbnail'),
-            'taxonomies'            => array( 'curios_manufacturer_tax' ),
+            'supports'              => array('title', 'thumbnail'),
+            'taxonomies'            => array('curios_manufacturer_tax'),
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,

@@ -15,6 +15,6 @@ class Bootstrap {
         }
         $bootProvider = new PluginBootProvider(new AppProvider());
         $app = new App($bootProvider);
-        // $app->boot();
+        $app->boot();
     }
 }

@@ -1,10 +1,22 @@
 <?php
 namespace Curios\App;
 
+use Curios\Wordpress\CustomObjects;
+use Curios\App\Wordpress\AdminExtentions;
+
 class AppProvider {
 
-    public function provide($app): void
+    public function register($container): void
     {
-        $app->get('wp_custom_objects')->add([Wordpress\CollectablePostType::class]);
+        $container['wp_custom_objects'] = function($c) {
+            return new CustomObjects([
+                Wordpress\CollectablePostType::class,
+                Wordpress\ManufacturerTaxonomy::class,
+                Wordpress\ManufacturerPostType::class,
+            ]);
+        };
+        $container['wp_admin_extensions'] = function($c) {
+            return new AdminExtentions();
+        };
     }
 }

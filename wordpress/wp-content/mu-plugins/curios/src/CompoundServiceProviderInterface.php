@@ -6,16 +6,13 @@ namespace Curios;
  * 
  * A provider that registers other providers
  */
-interface CompoundServiceProviderInterface extends ServiceProviderInterface
+interface CompoundServiceProviderInterface 
 {
     /**
-     * Registers services on the given container.
-     *
-     * This method should only be used to configure services and parameters.
-     * It should not get services.
+     * return an array of providers
+     * 
+     * Array of providers must be in order that their
+     * services should be instantiated
      */
-    public function register(Container $container);
-
-    
     public function providers();
 }

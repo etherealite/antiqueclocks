@@ -14,15 +14,21 @@ class App extends Container implements ContainerInterface {
 
     protected string $path;
 
-    public function __construct($bootProvider) {
+    public function __construct(CompoundServiceProviderInterface $bootProvider) {
         $this->pimple = new PimpleContainer();
         $this->bootProvider = $bootProvider;
     }
 
     public function boot(): void
     {
-        $this->bootProvider->provide($this->pimple);
-        $this->get('lifecycle')->start();
+        $compounded = $this->bootProvider->providers();
+
+        foreach ($compounded as $provider)
+        {
+            $provider->register($this->pimple);
+        }
+
+        $this->get('wp_lifecycle')->start();
     }
 
 }

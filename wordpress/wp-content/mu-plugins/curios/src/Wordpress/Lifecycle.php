@@ -5,10 +5,11 @@ class Lifecycle {
 
     private ?string $requestType;
 
-    public function __construct()
+    public function __construct(CustomObjects $customObjects, $adminExtentions)
     {
         $this->requestType = null;
-        // $self->hooks = $hooks;
+        $this->customObjects = $customObjects;
+        $this->adminExtensions = $adminExtentions;
     }
 
     public function start(): void
@@ -29,15 +30,20 @@ class Lifecycle {
             return;
         }
 
-        // register hooks that run in all contexts
+        add_action('init', [$this, 'init']);
 
-        $requestContext = $this->requestContext;
-        $map = [
-            $requestContext::ADMIN => $this->admin,
-        ];
+        if ($requestType = $this->requestContext::ADMIN){
+            add_action('admin_init', [$this, 'adminInit']);
+        }
     }
 
-    public function allContexts(): void
+    public function init(): void
     {
+        $this->customObjects->register();
+    }
+
+    public function adminInit(): void
+    {
+       $this->adminExtensions->register(); 
     }
 }

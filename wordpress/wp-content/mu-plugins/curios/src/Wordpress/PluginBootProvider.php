@@ -5,33 +5,28 @@ use Monolog\Logger;
 use Monolog\Handler\ErrorLogHandler;
 use Pimple\Container as pimpleContainer;
 
-use Curios\ServiceProviderInterface;
+use Curios\CompoundServiceProviderInterface;
+use Curios\CoreServiceProvider;
 use Curios\Container;
 
-class PluginBootProvider implements ServiceProviderInterface {
+class PluginBootProvider implements CompoundServiceProviderInterface {
 
     protected $pimpleContainer;
 
+    protected array $providers = [];
+
     public function __construct($appProvider){
-        $this->appProvider = $appProvider;
+        $coreServiceProvider = new CoreServiceProvider();
+        $this->providers = [
+            $appProvider,
+            $coreServiceProvider,
+        ];
     }
 
-    public function register(Container $container): void
+    public function providers(): array
     {
-        $this->container = $container;
-        $this->always($container);
+        return $this->providers;
     }
 
-    public function always($container): void
-    {
-        $container['monolog'] = function ($c) {
-            // create a log channel, note: other plugins might be using monolog
-            $logger = new Logger('curios');
-            $logger->pushHandler(new ErrorLogHandler());
-            return $logger;
-        };
-        $container['lifecycle'] = function($c) {
-            return new Lifecycle();
-        };
-    }
+
 }
