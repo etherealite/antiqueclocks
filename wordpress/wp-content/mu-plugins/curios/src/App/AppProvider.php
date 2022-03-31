@@ -11,8 +11,8 @@ class AppProvider {
         $container['wp_custom_objects'] = function($c) {
             return new CustomObjects([
                 Wordpress\CollectablePostType::class,
+                Wordpress\CollectableTypeTaxonomy::class,
                 Wordpress\ManufacturerTaxonomy::class,
-                Wordpress\ManufacturerPostType::class,
             ]);
         };
         $container['wp_admin_extensions'] = function($c) {

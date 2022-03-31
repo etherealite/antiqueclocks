@@ -12,6 +12,7 @@ class AdminExtentions {
 
     public function register(): void
     {
+        $this->changeMenuPositions();
         add_action('current_screen', [$this, 'currentScreen']);
     }
 
@@ -21,10 +22,15 @@ class AdminExtentions {
             if ($screen->post_type === CollectablePostType::slug()) {
                 add_filter('enter_title_here', fn($t) => 'add Model');
             }
-            elseif ($screen->post_type === ManufacturerPostType::slug()) {
-                (new ManufacturerPostEditScreen())->register();
-            }
         }
 
+
+
+    }
+
+    public function changeMenuPositions(): void
+    {
+        $builtinPostType = get_post_type_object('post');
+        $builtinPostType->menu_position = 25;
     }
 }

@@ -24,6 +24,10 @@
  * Prevet wordpress from running Background Updates site health check
  */
  add_filter('site_status_tests', function($tests) {
-    unset($tests['async']['background_updates']);
-    return $tests;
+   unset($tests['async']['background_updates']);
+   return $tests;
  }, 10, 1);
+
+ if (wp_get_environment_type() === 'development') {
+   add_action('init', fn() => flush_rewrite_rules());
+ }

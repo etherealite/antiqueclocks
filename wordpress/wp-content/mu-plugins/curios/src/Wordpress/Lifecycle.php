@@ -33,7 +33,7 @@ class Lifecycle {
         add_action('init', [$this, 'init']);
 
         if ($requestType = $this->requestContext::ADMIN){
-            add_action('admin_init', [$this, 'adminInit']);
+            add_action('init', [$this, 'adminInit']);
         }
     }
 

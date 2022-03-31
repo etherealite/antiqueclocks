@@ -28,15 +28,22 @@ class CustomObjects {
         }
     }
 
+    /**
+     * Call the registration method of each custom object
+     * 
+     * The custom taxonomies must come before the posts when a post
+     * uses a taxonmy's rewrite tag in it's own rewrite slug.
+     */
     public function register()
     {
-        while ($this->unregisteredPosts) {
-            $object = array_pop($this->unregisteredPosts);
-            $object->register();
-        }
         while ($this->unregisteredTaxs) {
             $object = array_pop($this->unregisteredTaxs);
             $object->register();
         }
+        while ($this->unregisteredPosts) {
+            $object = array_pop($this->unregisteredPosts);
+            $object->register();
+        }
+
     }
 }
