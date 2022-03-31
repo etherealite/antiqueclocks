@@ -50,33 +50,10 @@ class CollectablePostType extends CustomPostType {
             // array( 'core/image' ),
         ];
 
-        // global $wp_rewrite;
-        // $slug = $this::slug();
-        // $wp_rewrite->add_rewrite_tag( '%collectable_name%', '([^/]+)', 'collectable_name=' );
-        // $wp_rewrite->add_permastruct('collectable', '%collectable_type%/%collectable_name%',
-        //     [
-        //         'with_front' => false,
-        //         'ep_mask' => EP_NONE,
-        //         'paged' => false,
-        //     ]
-        // );
-        
 
-        // add_filter('rewrite_rules_array', function($rules) {
-        //     global $wp_rewrite;
-        //     $struct = $wp_rewrite->get_extra_permastruct('collectable');
-        //     $collectableRules = $wp_rewrite->generate_rewrite_rules($struct, EP_NONE, false, false, false);
-        //     return array_merge($rules, $collectableRules);
-        // });
-
-        add_filter( 'wp_insert_post_data', [$this, 'wpInsertPostData'], 10, 4);
         add_filter( 'post_type_link', [$this, 'postTypeLink'], 10, 3 );
     }
 
-    public function wpInsertPostData($data, $postarr, $unsanitized_postarr)
-    {
-        return $data;
-    }
 
     public function postTypeLink(string $link, WP_Post $post, string $leavename): string
     {
