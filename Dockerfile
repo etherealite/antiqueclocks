@@ -36,6 +36,40 @@ RUN set -eux; \
 	; \
     rm -rf /var/lib/apt/lists/*;
 
+# Install asdf
+# RUN set -eux; \
+#     git clone https://github.com/asdf-vm/asdf.git /opt/asdf --branch v0.9.0; \
+#     { \
+#         echo '#!/usr/bin/env bash'; \
+#         echo 'export ASDF_DATA_DIR=/opt/asdf/data'; \
+#         echo '. /opt/asdf/asdf.sh'; \
+#         echo '. /opt/asdf/completions/asdf.bash'; \
+#     } >> /etc/profile.d/asdf.sh;
+    # . /etc/profile.d/asdf.sh; \
+    # asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git; \
+    # chmod ugo+Xr -R /opt/asdf;
+
+#install NVM
+SHELL ["/bin/bash", "-c"]
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 16.14.2
+RUN set -eux; \
+    curl -o-\
+        'https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh' | \
+        bash;
+
+RUN \
+    . "$NVM_DIR/nvm.sh"; \
+    nvm install "$NODE_VERSION"; \
+    nvm alias default "$NODE_VERSION"; 
+    # nvm use default;
+
+RUN set -eux; \
+    mkdir -p /usr/local/etc/profile.d; \
+    { \
+        echo 'source "$NVM_DIR/nvm.sh"'; \
+        echo 'nvm use default'; \
+    } >> /usr/local/etc/profile.d/nvm;
 
 
 # local development environment image
@@ -143,9 +177,17 @@ RUN set -eux; \
 # Augment the development user accounts shell
 USER www-data
 
+
 RUN set -eux; \
-    git clone --depth 1 https://github.com/Bash-it/bash-it.git  /home/www-data/.bash_it; \
-    /home/www-data/.bash_it/install.sh --silent;
+    touch "$HOME"/.bashrc; \
+    # Install Bash-It Bash shell extentions
+    git clone --depth 1 https://github.com/Bash-it/bash-it.git "$HOME"/.bash_it; \
+    "$HOME"/.bash_it/install.sh --silent; \
+    # source nvm profile.d from /etc/
+    { \
+        echo '# enable the docker managed nvm version'; \
+        echo 'source /usr/local/etc/profile.d/nvm'; \
+    } >> "$HOME"/.bashrc;
 
 USER root
 
