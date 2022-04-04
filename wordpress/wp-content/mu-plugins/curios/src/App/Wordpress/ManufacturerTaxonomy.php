@@ -1,11 +1,15 @@
 <?php
 namespace Curios\App\Wordpress;
 
+use \WP_Error;
+
 use Curios\Wordpress\CustomTaxonomy;
 
 use Curios\App\Wordpress\CollectablePostType;
 
 class ManufacturerTaxonomy extends CustomTaxonomy {
+
+    private bool $rollingBack = false;
 
     public static function slug(): string
     {
@@ -50,5 +54,36 @@ class ManufacturerTaxonomy extends CustomTaxonomy {
             [CollectablePostType::slug()], 
             $args
         );
+
+        add_action('set_object_terms', [$this, 'oneToOneConstraint'], 10, 6);
+    }
+
+    public function oneToOneConstraint(
+        $object_id,
+        $terms,
+        $tt_ids,
+        $taxonomy,
+        $append,
+        $old_tt_ids
+    ): void {
+        $slug = $this::slug();
+        if ($taxonomy !== $slug || count($terms) <= 1 || $this->rollingBack) {
+            return;
+        }
+        if ($this->rollingBack && count($old_tt_ids) > 1) {
+            wp_die(new WP_Error(
+                'curios_rollback_failure',
+                'Rollback would violate single term per post constraint'
+            ));
+        }
+
+        $this->rollingBack = true;
+        // wp_remove_object_terms($object_id, $terms, $slug);
+        wp_set_object_terms($object_id, $old_tt_ids, $slug);
+        $this->rollingBack = false;
+        wp_die(new WP_Error(
+            'curios_constraint_failure',
+            'A post is limited to a single Manufacturer.'
+        ));
     }
 }

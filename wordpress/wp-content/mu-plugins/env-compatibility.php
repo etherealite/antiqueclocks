@@ -24,10 +24,22 @@
  * Prevet wordpress from running Background Updates site health check
  */
  add_filter('site_status_tests', function($tests) {
-   unset($tests['async']['background_updates']);
-   return $tests;
+  unset($tests['async']['background_updates']);
+  return $tests;
  }, 10, 1);
 
- if (wp_get_environment_type() === 'development') {
-   add_action('init', fn() => flush_rewrite_rules());
- }
+if (wp_get_environment_type() === 'development') {
+  add_action('init', fn() => flush_rewrite_rules());
+
+  /**
+   * Administrator's sessions never expire
+   */
+  add_filter('auth_cookie_expiration', function($seconds, $user_id, $remember){
+    $user_meta = get_userdata($user_id);
+    $user_roles = $user_meta->roles;
+    if (in_array('administrator', $user_roles)) {
+      return  PHP_INT_MAX - time() - 5;
+    }
+    return $seconds;
+  }, 99, 3);
+}

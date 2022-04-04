@@ -20,7 +20,7 @@ class CollectablePostType extends CustomPostType {
             'label'                 => __( 'Collectable', 'curios' ),
             'description'           => __( 'A collectable item', 'curios' ),
             'labels'                => $labels,
-            'supports'              => array('title', 'editor', 'thumbnail'),
+            'supports'              => array('title', 'editor', 'thumbnail', 'custom-fields'),
             'taxonomies'            => [$typeTaxSlug],
             'hierarchical'          => false,
             'public'                => true,
@@ -50,8 +50,43 @@ class CollectablePostType extends CustomPostType {
             // array( 'core/image' ),
         ];
 
+        $sale_schema = [
+            'type' => 'object',
+            'properties' => [
+                'kind' => [
+                    'type' => 'string',
+                    'pattern' => '^auction$'
+                ],
+                'date' => [
+                    'type' => 'string',
+                    'format' => 'date-time'
+                ],
+                'realizedPrice' => [
+                    'type' => 'string',
+                    'pattern' => '^(0|([1-9]+[0-9]*))(\.[0-9]{1,2})?$'
+                ],
+                /**
+                 * the pre-auction price estimate if this is an 
+                 * auction sale.
+                 */ 
+                'estimate' => [
+                    'type' => 'string',
+                    'pattern' => '^(0|([1-9]+[0-9]*))(\.[0-9]{1,2})?$'
+                ]
+            ],
+            'required' => ['realizedPrice']
+        ];
 
-        add_filter( 'post_type_link', [$this, 'postTypeLink'], 10, 3 );
+        register_post_meta($slug, 'collectable_sale', [
+            'single' => true,
+            'type' => 'object',
+            'show_in_rest' => [
+                'schema' => $sale_schema
+            ]
+        ]);
+
+
+        add_filter('post_type_link', [$this, 'postTypeLink'], 10, 3);
     }
 
 
