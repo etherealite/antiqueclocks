@@ -1,4 +1,5 @@
 .env
+/node_modules
 /temp
 /vendor-bin/**/vendor
 /vendor
@@ -11,6 +12,7 @@ wordpress/wp-content/*
 !wordpress/wp-content/mu-plugins
 wordpress/wp-content/mu-plugins/*
 !wordpress/wp-content/mu-plugins/curios
+wordpress/wp-content/mu-plugins/curios/build
 !wordpress/wp-content/mu-plugins/bedrock-autoloader.php
 !wordpress/wp-content/mu-plugins/env-compatibility.php
 !wordpress/wp-content/themes

@@ -5,15 +5,21 @@ class Lifecycle {
 
     private ?string $requestType;
 
-    public function __construct(CustomObjects $customObjects, $adminExtentions)
+    public function __construct(
+        CustomObjects $customObjects, 
+        $adminExtentions,
+        $blocks
+    )
     {
         $this->requestType = null;
         $this->customObjects = $customObjects;
         $this->adminExtensions = $adminExtentions;
+        $this->blocks = $blocks;
     }
 
-    public function start(): void
-    {
+    public function start($app): void
+    {   
+        $this->app = $app;
         $runStages = function($context) {
             $this->dispatch($context);
         };
@@ -40,6 +46,7 @@ class Lifecycle {
     public function init(): void
     {
         $this->customObjects->register();
+        $this->blocks->register($this->app->getPluginPath());
     }
 
     public function adminInit(): void

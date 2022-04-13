@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "curios/collectable-manufacturer",
+	"version": "0.1.0",
+	"title": "Manufacturer",
+	"category": "widgets",
+	"icon": "building",
+	"description": "Set the manufacturer of a Curios Collectable",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "curios",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

@@ -1,5 +1,5 @@
 <?php
-namespace Curios\App;
+namespace Curios\App\Wordpress;
 
 class Plugin {
     public const VERSION = '0.0.1';

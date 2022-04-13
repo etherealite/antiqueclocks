@@ -1,5 +1,5 @@
 #  contains dependencies and config shared by all stages
-FROM wordpress:apache as shared
+FROM wordpress:5.9.3-php7.4-apache as shared
 
 ENV webroot /usr/src/wordpress
 # install globally persistant dependencies
@@ -53,12 +53,14 @@ RUN set -eux; \
 SHELL ["/bin/bash", "-c"]
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 16.14.2
+ENV NPM_VERSION 6.14.16
 RUN set -eux; \
     curl -o-\
         'https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh' | \
         bash;
 
 RUN \
+    echo "npm@${NPM_VERSION}" > $NVM_DIR/default-packages; \
     . "$NVM_DIR/nvm.sh"; \
     nvm install "$NODE_VERSION"; \
     nvm alias default "$NODE_VERSION"; 
@@ -174,6 +176,7 @@ RUN set -eux; \
     ; \
     a2enmod ssl && a2ensite default-ssl.conf;
 
+
 # Augment the development user accounts shell
 USER www-data
 
@@ -188,6 +191,8 @@ RUN set -eux; \
         echo '# enable the docker managed nvm version'; \
         echo 'source /usr/local/etc/profile.d/nvm'; \
     } >> "$HOME"/.bashrc;
+
+
 
 USER root
 

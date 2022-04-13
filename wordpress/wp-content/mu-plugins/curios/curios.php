@@ -22,7 +22,7 @@
 (static function() {
     $curios_plugin_path = plugin_dir_path(__FILE__);
     if (!class_exists('\Curios\Bootstrap')) {
-        require $curios_plugin_path . 'src/Bootstrap.php';
+        require $curios_plugin_path . 'src/server/Bootstrap.php';
     }
     $bootstrapper = new \Curios\Bootstrap();
     $bootstrapper->plugin_boot($curios_plugin_path,);

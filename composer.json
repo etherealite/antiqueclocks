@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-          "Curios\\": "wordpress/wp-content/mu-plugins/curios/src/"
+          "Curios\\": "wordpress/wp-content/mu-plugins/curios/src"
         },
         "files": ["wordpress/wp-content/mu-plugins/curios/src/on_autoload.php"]
       },
@@ -29,7 +29,8 @@
         "psr/container": "^2.0",
         "bueltge/remove-comments-absolutely": "^1.5",
         "roots/bedrock-autoloader": "^1.0",
-        "monolog/monolog": "^2.4"
+        "monolog/monolog": "^2.4",
+        "wpackagist-plugin/relevanssi-light": "^1.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

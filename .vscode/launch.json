@@ -5,6 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "firefox",
+            "request": "attach",
+            "name": "Attach FireFox",
+            "url": "https://localhost:8443",
+            "webRoot": "${workspaceFolder}/wordpress",
+            "log": {
+                "consoleLevel": {
+                    // "PathConversion": "Debug",
+                    "default": "Error"
+                }
+            },
+            "pathMappings": [
+                {
+                    "url": "webpack://sample-block/src",
+                    "path": "${workspaceFolder}/wordpress/wp-content/mu-plugins/sample-block/src"
+                }
+            ]
+        },
+        {
             "name": "Listen for Xdebug",
             "type": "php",
             "request": "launch",

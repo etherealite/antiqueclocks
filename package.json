@@ -1,0 +1,43 @@
+{
+  "name": "antiqueclocks",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "directories": {
+    "test": "tests"
+  },
+  "bin": {
+    "curios": "./bin/curios.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "packages-update": "wp-scripts packages-update",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+    "start": "wp-scripts start --webpack-src-dir=wordpress/wp-content/mu-plugins/curios/src/App --output-path=wordpress/wp-content/mu-plugins/curios/build",
+    "build": "wp-scripts build --webpack-src-dir=wordpress/wp-content/mu-plugins/curios/src/App --output-path=wordpress/wp-content/mu-plugins/curios/build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/etherealite/antiqueclocks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/etherealite/antiqueclocks/issues"
+  },
+  "homepage": "https://github.com/etherealite/antiqueclocks#readme",
+  "devDependencies": {
+    "@types/wordpress__block-editor": "^6.0.6",
+    "@types/wordpress__blocks": "^11.0.0",
+    "@types/wordpress__components": "^19.3.1",
+    "@types/wordpress__core-data": "^2.4.5",
+    "@types/wordpress__data": "^6.0.0",
+    "@types/wordpress__element": "^2.14.1",
+    "@wordpress/scripts": "^22.4.0"
+  },
+  "dependencies": {
+    "react-select": "^5.3.0"
+  }
+}

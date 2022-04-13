@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "curios/collectable",
+	"version": "0.1.0",
+	"title": "Collectable",
+	"category": "widgets",
+	"icon": "building",
+	"description": "Structure of the Curios Collectable Post Type",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "curios",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

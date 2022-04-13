@@ -28,6 +28,7 @@
   return $tests;
  }, 10, 1);
 
+
 if (wp_get_environment_type() === 'development') {
   add_action('init', fn() => flush_rewrite_rules());
 
@@ -42,4 +43,6 @@ if (wp_get_environment_type() === 'development') {
     }
     return $seconds;
   }, 99, 3);
+
+  
 }

@@ -1,11 +1,15 @@
 <?php
 namespace Curios\App\Wordpress;
 
-use \Wp_Post;
+use \WP_Post;
+use \WP_REST_Response;
+use \WP_REST_Request;
 
 use Curios\Wordpress\CustomPostType;
 
 class CollectablePostType extends CustomPostType {
+
+    private const Content = '<!-- wp:curios/collectable /-->';
 
     public static function slug(): string {
         return 'curios_collectable';
@@ -29,7 +33,7 @@ class CollectablePostType extends CustomPostType {
             'menu_icon'             => 'dashicons-coffee',
             'show_in_nav_menus'     => true,
             'can_export'            => true,
-            'has_archive'           => false,
+            'has_archive'           => 'clocks',
             'rewrite'               => [
                 'slug' => "%{$typeTaxSlug}%",
                 'with_front' => true,
@@ -42,13 +46,14 @@ class CollectablePostType extends CustomPostType {
             'publicly_queryable'    => true,
             'capability_type'       => 'page',
             'show_in_rest'          => true,
+            'template'              => [
+                ['curios/collectable', [], []]
+            ],
         ];
         register_post_type($slug, $args);
 
         $post_type_object = get_post_type_object($slug);
-        $post_type_object->template = [
-            // array( 'core/image' ),
-        ];
+        $post_type_object->template_lock = 'all';
 
         $sale_schema = [
             'type' => 'object',
@@ -87,6 +92,11 @@ class CollectablePostType extends CustomPostType {
 
 
         add_filter('post_type_link', [$this, 'postTypeLink'], 10, 3);
+
+        add_filter('wp_insert_post_data', [$this, 'wpInsertPostData'], 10, 1);
+
+        add_filter('rest_prepare_' . $slug, [$this, 'restPrepare'], 10 , 3);
+
     }
 
 
@@ -102,5 +112,26 @@ class CollectablePostType extends CustomPostType {
         $defaultTerm = get_taxonomy($taxSlug);
         $termSlug = $term ? $term->slug :  $defaultTerm->default_term['slug'];
         return str_replace("%{$taxSlug}%", $termSlug, $link);
+    }
+
+    public function wpInsertPostData($data): array
+    {
+        if ($data['post_type'] !== $this::slug()) {
+            return $data;
+        }
+        $data['post_content'] = '';
+        return $data;
+    }
+
+    public function restPrepare(
+        WP_REST_Response $response, 
+        WP_Post $post, 
+        WP_REST_Request $request
+    )
+    {
+        $data = $response->get_data();
+        $data['content']['raw'] = $this::Content;
+        $response->set_data($data);
+        return $response;
     }
 }

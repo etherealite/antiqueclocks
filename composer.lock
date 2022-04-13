@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03c7a27f2cb7a1a852ddf62aa7e56142",
+    "content-hash": "b1d6c3b736504434820565756c9dac2c",
     "packages": [
         {
             "name": "bueltge/remove-comments-absolutely",
@@ -527,6 +527,24 @@
                 }
             ],
             "time": "2020-12-04T15:59:12+00:00"
+        },
+        {
+            "name": "wpackagist-plugin/relevanssi-light",
+            "version": "1.2.1",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/relevanssi-light/",
+                "reference": "tags/1.2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/relevanssi-light.1.2.1.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/relevanssi-light/"
         },
         {
             "name": "wpackagist-theme/generatepress",
@@ -3385,5 +3403,5 @@
         "php": ">=7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -60,10 +60,4 @@ class CollectableTypeTaxonomy extends CustomTaxonomy {
 
         // $this->rewrites();
     }
-
-    public function rewrites(): void
-    {
-        global $wp_rewrite;
-        $wp_rewrite->add_rewrite_tag( '%collectable_type%', '([^/]+)', 'collectable_type=' );
-    }
 }
