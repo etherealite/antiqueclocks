@@ -21,14 +21,14 @@ import Edit from './edit';
 import save from './save';
 
 
-import blockJson from './block.json';
+import block from './block.json';
 
 /**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType(blockJson.name, {
+registerBlockType(block.name, {
 	/**
 	 * @see ./edit.js
 	 */

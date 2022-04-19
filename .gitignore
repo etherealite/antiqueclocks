@@ -17,4 +17,4 @@ wordpress/wp-content/mu-plugins/curios/build
 !wordpress/wp-content/mu-plugins/env-compatibility.php
 !wordpress/wp-content/themes
 wordpress/wp-content/themes/*
-!wordpress/wp-content/themes/antiqueclocks
+wordpress/wp-content/themes/antiqueclocks

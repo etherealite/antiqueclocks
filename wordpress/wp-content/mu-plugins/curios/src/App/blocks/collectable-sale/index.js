@@ -5,8 +5,6 @@
  */
 import { registerBlockType } from '@wordpress/blocks';
 
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * All files containing `style` keyword are bundled together. The code used
@@ -15,15 +13,15 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './style.scss';
+import "react-datetime/css/react-datetime.css";
+/**
+ * Internal dependencies
+ */
+import Edit from './edit';
+import save from './save';
 
 
 import block from './block.json';
-
-
-const TEMPLATE = [
-	['curios/collectable-manufacturer', {}, []],
-	['curios/collectable-sale', {}, []],
-];
 
 /**
  * Every block starts by registering a new block type definition.
@@ -34,18 +32,9 @@ registerBlockType(block.name, {
 	/**
 	 * @see ./edit.js
 	 */
-	edit() {
-		const blockProps = useBlockProps();
-		return (
-			<div {...blockProps}>
-				<InnerBlocks
-					template={TEMPLATE}
-				/>
-			</div>
-		);
-	},
-
-	save() {
-		return null;
-	}
+	edit: Edit,
+	/**
+	 * @see ./save.js
+	 */
+	save,
 });

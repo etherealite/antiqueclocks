@@ -136,14 +136,17 @@ export default function Edit({attributes, setAttributes}) {
 	};
 	return (
 		<div {...useBlockProps()}>
-			<CreatableSelect
-				value={newVal ?? currentValue}
-				isLoading={isLoading}
-				placeholder={'Select a Manufacturer...'}
-				options={searchResults}
-				onChange={handleChange}
-				onInputChange={newValue => setSearch(newValue)}
-			/>
+			<h4>Manufacturer</h4>
+			<div>
+				<CreatableSelect
+					value={newVal ?? currentValue}
+					isLoading={isLoading}
+					placeholder='Select a manufacturer...'
+					options={searchResults}
+					onChange={handleChange}
+					onInputChange={newValue => setSearch(newValue)}
+				/>
+			</div>
 		</div>
 	);
 

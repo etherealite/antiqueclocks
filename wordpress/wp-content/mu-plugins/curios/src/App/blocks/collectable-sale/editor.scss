@@ -7,12 +7,6 @@
 // .wp-block-create-block-sample-block {
 // 	border: 1px dotted #f00;
 // }
-
-.wp-block-curios-collectable {
-    .wp-block-curios-collectable-manufacturer,
-    .wp-block-curios-collectable-sale
-    {
-        color: red;
-        h4 { display: inline}
-    }
+.wp-block-curios-collectable-sale {
+ .disabled { opacity: 0.2 }
 }
