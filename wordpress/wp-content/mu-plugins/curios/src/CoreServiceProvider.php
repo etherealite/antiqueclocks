@@ -24,6 +24,7 @@ class CoreServiceProvider implements ServiceProviderInterface {
                 $c['wp_custom_objects'],
                 $c['wp_admin_extensions'],
                 $c['wp_blocks'],
+                $c['wp_plugin'],
             );
         };
     }

@@ -8,13 +8,15 @@ class Lifecycle {
     public function __construct(
         CustomObjects $customObjects, 
         $adminExtentions,
-        $blocks
+        $blocks,
+        $plugin
     )
     {
         $this->requestType = null;
         $this->customObjects = $customObjects;
         $this->adminExtensions = $adminExtentions;
         $this->blocks = $blocks;
+        $this->plugin = $plugin;
     }
 
     public function start($app): void
@@ -47,6 +49,7 @@ class Lifecycle {
     {
         $this->customObjects->register();
         $this->blocks->register($this->app->getPluginPath());
+        $this->plugin->init();
     }
 
     public function adminInit(): void

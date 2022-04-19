@@ -3,15 +3,20 @@ namespace Curios\App;
 
 use Curios\Wordpress\CustomObjects;
 use Curios\Wordpress\Blocks;
+use Curios\App\Wordpress\Plugin;
 use Curios\App\Wordpress\AdminExtentions;
 
 class AppProvider {
 
     public function register($container): void
     {
+        $container['wp_plugin'] = function($c) {
+            return new Plugin();
+        };
         $container['wp_blocks'] = function($c) {
             return new Blocks([
                 'collectable-manufacturer',
+                'collectable-sale',
                 'collectable',
             ]);
         };

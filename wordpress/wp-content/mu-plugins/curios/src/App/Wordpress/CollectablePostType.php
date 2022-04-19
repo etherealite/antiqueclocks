@@ -6,10 +6,12 @@ use \WP_REST_Response;
 use \WP_REST_Request;
 
 use Curios\Wordpress\CustomPostType;
+use Curios\Wordpress\Object_Meta_Json_Storage;
 
 class CollectablePostType extends CustomPostType {
 
     private const Content = '<!-- wp:curios/collectable /-->';
+    private Object_Meta_Json_Storage $jsonAdapter;
 
     public static function slug(): string {
         return 'curios_collectable';
@@ -36,7 +38,7 @@ class CollectablePostType extends CustomPostType {
             'has_archive'           => 'clocks',
             'rewrite'               => [
                 'slug' => "%{$typeTaxSlug}%",
-                'with_front' => true,
+                'with_front' => false,
                 'pages' => false,
                 'feed' => false,
                 'ep_mask' => EP_NONE,
@@ -55,12 +57,26 @@ class CollectablePostType extends CustomPostType {
         $post_type_object = get_post_type_object($slug);
         $post_type_object->template_lock = 'all';
 
+        $this->registerMeta();
+
+        add_filter('post_type_link', [$this, 'postTypeLink'], 10, 3);
+
+        add_filter('wp_insert_post_data', [$this, 'wpInsertPostData'], 10, 1);
+
+        add_filter('rest_prepare_' . $slug, [$this, 'restPrepare'], 10 , 3);
+    }
+
+    
+    protected function registerMeta(): void
+    {
+        $slug = $this::slug();
+
         $sale_schema = [
             'type' => 'object',
             'properties' => [
                 'kind' => [
                     'type' => 'string',
-                    'pattern' => '^auction$'
+                    'pattern' => '^auction|other$'
                 ],
                 'date' => [
                     'type' => 'string',
@@ -79,24 +95,20 @@ class CollectablePostType extends CustomPostType {
                     'pattern' => '^(0|([1-9]+[0-9]*))(\.[0-9]{1,2})?$'
                 ]
             ],
-            'required' => ['realizedPrice']
+            'required' => []
         ];
 
         register_post_meta($slug, 'collectable_sale', [
             'single' => true,
             'type' => 'object',
             'show_in_rest' => [
-                'schema' => $sale_schema
+                'schema' => $sale_schema,
             ]
         ]);
 
-
-        add_filter('post_type_link', [$this, 'postTypeLink'], 10, 3);
-
-        add_filter('wp_insert_post_data', [$this, 'wpInsertPostData'], 10, 1);
-
-        add_filter('rest_prepare_' . $slug, [$this, 'restPrepare'], 10 , 3);
-
+        $this->jsonAdapter =  new Object_Meta_Json_Storage();
+        $this->jsonAdapter->enable_meta( 'post', $slug, 'collectable_sale' );
+        $this->jsonAdapter->register_hooks();
     }
 
 
@@ -113,6 +125,7 @@ class CollectablePostType extends CustomPostType {
         $termSlug = $term ? $term->slug :  $defaultTerm->default_term['slug'];
         return str_replace("%{$taxSlug}%", $termSlug, $link);
     }
+
 
     public function wpInsertPostData($data): array
     {
