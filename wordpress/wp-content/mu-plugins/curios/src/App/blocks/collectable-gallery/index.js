@@ -5,8 +5,6 @@
  */
 import { registerBlockType } from '@wordpress/blocks';
 
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * All files containing `style` keyword are bundled together. The code used
@@ -16,38 +14,35 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  */
 import './style.scss';
 
+/**
+ * Internal dependencies
+ */
+import Edit from './edit';
+import save from './save';
 
-import block from './block.json';
 
-
-const TEMPLATE = [
-	['curios/collectable-manufacturing', {}, []],
-	['curios/collectable-sale', {}, []],
-	['curios/collectable-gallery', {}, []],
-];
+import metadata  from './block.json';
 
 /**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType(block.name, {
+registerBlockType(metadata.name, {
 	/**
 	 * @see ./edit.js
 	 */
-	edit() {
-		const blockProps = useBlockProps();
-		return (
-			<div {...blockProps}>
-				<InnerBlocks
-					template={TEMPLATE}
-				/>
-			</div>
-		);
-	},
+	edit: Edit,
+	/**
+	 * @see ./save.js
+	 */
+	save,
 
-	save() {
-		return null;
+	/**
+	 * set props on the wrapper div containing the block allow setting things like
+	 * the id, className, onClick, tabIndex. 
+	*/
+	getEditWrapperProps(props) {
+		return props;
 	},
-
 });

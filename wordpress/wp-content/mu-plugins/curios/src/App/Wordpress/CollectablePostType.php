@@ -1,6 +1,7 @@
 <?php
 namespace Curios\App\Wordpress;
 
+use \WP_Error;
 use \WP_Post;
 use \WP_REST_Response;
 use \WP_REST_Request;
@@ -10,24 +11,48 @@ use Curios\Wordpress\Object_Meta_Json_Storage;
 
 class CollectablePostType extends CustomPostType {
 
+    /**
+     * Post specific block template code
+     */
     private const Content = '<!-- wp:curios/collectable /-->';
+
+    /**
+     * Slug key used to identify this post type by wordpress internals
+     */
+    public const Slug = 'curios_collectable';
+
+    /**
+     * Allows storing fields as a json string in the post_meta table
+     * as apposed to a serialized php string.
+     */
     private Object_Meta_Json_Storage $jsonAdapter;
 
-    public static function slug(): string {
-        return 'curios_collectable';
+    public function __construct(?Object_Meta_Json_Storage $jsonAdapter=null)
+    {
+        if ($jsonAdapter) {
+            $this->jsonAdapter = $jsonAdapter;
+        }
+        else {
+            $this->jsonAdapter = new Object_Meta_Json_Storage();
+        }
     }
 
+
+    /**
+     * Register wordpress hooks to enable this custom post type
+     */
     public function register(): void 
     {
-        $slug = $this::slug();
-        $typeTaxSlug = CollectableTypeTaxonomy::slug();
+        $slug = $this::Slug;
+        $typeTaxSlug = CollectableTypeTaxonomy::Slug;
+        $manufacturerTaxSlug = ManufacturerTaxonomy::Slug;
         $labels = [];
         $args = [
             'label'                 => __( 'Collectable', 'curios' ),
             'description'           => __( 'A collectable item', 'curios' ),
             'labels'                => $labels,
             'supports'              => array('title', 'editor', 'thumbnail', 'custom-fields'),
-            'taxonomies'            => [$typeTaxSlug],
+            'taxonomies'            => [$typeTaxSlug, $manufacturerTaxSlug],
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
@@ -52,8 +77,10 @@ class CollectablePostType extends CustomPostType {
                 ['curios/collectable', [], []]
             ],
         ];
+
         register_post_type($slug, $args);
 
+        /** @var \WP_Post_Type */
         $post_type_object = get_post_type_object($slug);
         $post_type_object->template_lock = 'all';
 
@@ -67,9 +94,12 @@ class CollectablePostType extends CustomPostType {
     }
 
     
+    /**
+     * Register post meta fields for post type
+     */
     protected function registerMeta(): void
     {
-        $slug = $this::slug();
+        $slug = $this::Slug;
 
         $sale_schema = [
             'type' => 'object',
@@ -93,7 +123,7 @@ class CollectablePostType extends CustomPostType {
                 'estimate' => [
                     'type' => 'string',
                     'pattern' => '^(0|([1-9]+[0-9]*))(\.[0-9]{1,2})?$'
-                ]
+                ],
             ],
             'required' => []
         ];
@@ -106,42 +136,73 @@ class CollectablePostType extends CustomPostType {
             ]
         ]);
 
-        $this->jsonAdapter =  new Object_Meta_Json_Storage();
+
         $this->jsonAdapter->enable_meta( 'post', $slug, 'collectable_sale' );
         $this->jsonAdapter->register_hooks();
     }
 
 
-    public function postTypeLink(string $link, WP_Post $post, string $leavename): string
-    {
-        $taxSlug = CollectableTypeTaxonomy::slug();
-        $postSlug = $this::slug();
-        if ($post->post_type !== $postSlug) {
+    /**
+     * Replace taxonomy slug keys in permalinks
+     * 
+     * This takes the slug (taxonomy key) param passed in 
+     * `register_taxonomy()` and replaces it with the default
+     *  term's slug.
+     */
+    public function postTypeLink(
+        string $link,
+        WP_Post $post,
+        bool $leavename
+    ): string {
+        if ($post->post_type !== $this::Slug) {
             return $link;
         }
+        $taxSlug = CollectableTypeTaxonomy::Slug;
+        $maybeTax = get_taxonomy($taxSlug);
+ 
+        $typeTax = $maybeTax instanceof \WP_Taxonomy ? $maybeTax : null;
 
-        $term = ($terms = get_the_terms($post, $taxSlug)) ? $terms[0] : false;
-        $defaultTerm = get_taxonomy($taxSlug);
-        $termSlug = $term ? $term->slug :  $defaultTerm->default_term['slug'];
+        $defaultTerm = $typeTax->default_term ?? null;
+        $termSlug = $defaultTerm['slug'] ?? null;
+
+        if ($termSlug === null) {
+            throw new \Exception('Problem generating permalink');
+        }
+
         return str_replace("%{$taxSlug}%", $termSlug, $link);
     }
 
 
-    public function wpInsertPostData($data): array
+    /**
+     * Null out any writes to the post content out as an empty string
+     * 
+     * We want to keep the post content completly empty for the post 
+     * spcecific block template to work
+     */
+    public function wpInsertPostData(array $data): array
     {
-        if ($data['post_type'] !== $this::slug()) {
+        if ($data['post_type'] !== $this::Slug) {
             return $data;
         }
         $data['post_content'] = '';
         return $data;
     }
 
+
+    /** 
+     * Prevent saving any post content on post save
+     * 
+     * Overwrites post content with a static string  matching the
+     * gutenberg block code matching the post specific block 
+     * template for this post.
+     * 
+     */
     public function restPrepare(
         WP_REST_Response $response, 
         WP_Post $post, 
         WP_REST_Request $request
-    )
-    {
+    ): WP_REST_Response {
+
         $data = $response->get_data();
         $data['content']['raw'] = $this::Content;
         $response->set_data($data);

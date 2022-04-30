@@ -3,7 +3,7 @@ namespace Curios\Wordpress;
 
 class Blocks {
 
-    private array $unregisteredBocks = [];
+    private array $unregisteredBlocks = [];
 
     public function __construct(array $blocks)
     {

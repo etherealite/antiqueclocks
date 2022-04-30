@@ -15,7 +15,9 @@ class AppProvider {
         };
         $container['wp_blocks'] = function($c) {
             return new Blocks([
-                'collectable-manufacturer',
+                'collectable-image',
+                'collectable-gallery',
+                'collectable-manufacturing',
                 'collectable-sale',
                 'collectable',
             ]);

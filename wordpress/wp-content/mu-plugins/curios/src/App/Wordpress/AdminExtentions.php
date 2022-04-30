@@ -2,12 +2,18 @@
 namespace Curios\App\Wordpress;
 
 use \WP_SCREEN;
+use \WP_Post;
 
-use Curios\App\Wordpress\CollectablePostType;
-use Curios\App\Wordpress\ManufacturerPostType;
+use Curios\App\Wordpress\{
+    CustomObjects,
+    CollectablePostType, 
+    ManufacturerPostType,
+    CollectableTypeTaxonomy,
+    ManufacturerTaxonomy
+};
+
 
 class AdminExtentions {
-
 
     public function register(): void
     {
@@ -19,7 +25,7 @@ class AdminExtentions {
     public function currentScreen(WP_SCREEN $screen): void
     {
         if ($screen->base === 'post') {
-            if ($screen->post_type === CollectablePostType::slug()) {
+            if ($screen->post_type === CollectablePostType::Slug) {
                 /** Prevent wordpres from fetching patterns from online sources */
                 add_filter('should_load_remote_block_patterns', fn($b) => false);
                 /** change place holder text for new posts */
@@ -29,9 +35,22 @@ class AdminExtentions {
                     if (empty($editer_context->post)){
                         return $allowed_types;
                     }
-                    /** allow nothing */
-                    return [];
+                    /** allow everything for now */
+                    return $allowed_types;
                 }, 10, 2);
+            }
+        }
+        if ($screen->base === 'edit') {
+            if ($screen->post_type === CollectablePostType::Slug) {
+                add_filter('manage_posts_columns', function($posts_columns) {
+                    $posts_columns[
+                        'taxonomy-' . ManufacturerTaxonomy::Slug
+                    ] = 'Manufacturer';
+                    $posts_columns[
+                        'taxonomy-' . CollectableTypeTaxonomy::Slug
+                    ] = 'Type';
+                    return $posts_columns;
+                });
             }
         }
     }
@@ -43,6 +62,7 @@ class AdminExtentions {
 
     public function changeMenuPositions(): void
     {
+        /** @var \WP_Post_Type */
         $builtinPostType = get_post_type_object('post');
         $builtinPostType->menu_position = 25;
     }

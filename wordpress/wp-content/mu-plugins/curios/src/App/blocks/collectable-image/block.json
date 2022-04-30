@@ -1,16 +1,16 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "curios/collectable",
+	"name": "curios/collectable-image",
 	"version": "0.1.0",
-	"title": "Collectable",
+	"title": "Collectable Image",
 	"category": "widgets",
 	"icon": "building",
-	"description": "Structure of the Curios Collectable Post Type",
+	"description": "Images for a collectable gallery",
+	"parent": [ "curios/collectable-gallery" ],
 	"supports": {
 		"html": false
 	},
-	"attributes": {},
 	"textdomain": "curios",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",

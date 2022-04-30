@@ -23,7 +23,8 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"xdebug.php-debug",
-		"felixfbecker.php-intellisense"
+		"bmewburn.vscode-intelephense-client",
+		"getpsalm.psalm-vscode-plugin",
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

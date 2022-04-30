@@ -5,6 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "https://localhost:8443/wp-admin/post.php?post=95&action=edit",
+            "webRoot": "${workspaceFolder}/wordpress",
+            "smartStep": true,
+            "trace": true,
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+                "webpack://?:*/*": "${workspaceFolder}/*",
+                "webpack://antiqueclocks/wordpress/wp-content/mu-plugins/curios/src/App/*": 
+                    "${webRoot}/wp-content/mu-plugins/curios/src/App/*",
+                "webpack://wp/packages/block-library/build-module/*/@wordpress/block-library/src/*":
+                    "${webRoot}/wp-content/plugins/gutenberg/build/block-library/src/*",
+            }
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}/wordpress",
+            "trace": true,
+        },
+        {
             "type": "firefox",
             "request": "attach",
             "name": "Attach FireFox",

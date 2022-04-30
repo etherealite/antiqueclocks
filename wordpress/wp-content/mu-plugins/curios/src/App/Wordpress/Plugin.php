@@ -5,7 +5,7 @@ class Plugin {
     public const Version = '0.0.1';
     // TODO: add schema version and provide migrations
 
-    public function init()
+    public function init(): void
     {
         global $wp_rewrite;
         $wp_rewrite->set_permalink_structure('/blog/%postname%/');

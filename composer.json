@@ -35,11 +35,13 @@
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "squizlabs/php_codesniffer": "^3.6.2",
-        "phpunit/phpunit": "^9.5",
         "wp-phpunit/wp-phpunit": "^5.9",
         "yoast/phpunit-polyfills": "^1.0",
         "bamarni/composer-bin-plugin": "^1.5",
-        "php-stubs/wordpress-stubs": "^5.9"
+        "johnbillion/wp-hooks": "^0.8",
+        "php-stubs/wordpress-stubs": "^5.9",
+        "php-stubs/wordpress-globals": "^0.2",
+        "php-stubs/wp-cli-stubs": "^2.5"
     },
     "config": {
         "optimize-autoloader": true,

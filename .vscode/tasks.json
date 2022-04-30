@@ -19,6 +19,13 @@
                 "showReuseMessage": false,
                 "clear": false
             }
+        },
+        {
+            "type": "npm",
+            "script": "start",
+            "problemMatcher": [],
+            "label": "npm: start",
+            "detail": "wp-scripts start --webpack-src-dir=wordpress/wp-content/mu-plugins/curios/src/App --output-path=wordpress/wp-content/mu-plugins/curios/build"
         }
     ]
 }

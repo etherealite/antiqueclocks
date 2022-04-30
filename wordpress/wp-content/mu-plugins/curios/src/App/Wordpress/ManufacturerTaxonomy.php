@@ -9,16 +9,14 @@ use Curios\App\Wordpress\CollectablePostType;
 
 class ManufacturerTaxonomy extends CustomTaxonomy {
 
+    public const Slug = 'manufacturer';
+
     private bool $rollingBack = false;
 
-    public static function slug(): string
-    {
-        return 'manufacturer';
-    }
 
     public function register(): void 
     {
-        $slug = $this::slug();
+        $slug = $this::Slug;
 
         $labels = [
             'name' => __( 'Manufacturers', 'curios' ), /* name of the custom taxonomy */
@@ -37,6 +35,36 @@ class ManufacturerTaxonomy extends CustomTaxonomy {
             'with_front'                 => false,
             'hierarchical'               => false,
         ];
+
+        /**
+        * @var array{
+        *   labels?: string[],
+        *   description?: string,
+        *   public?: bool,
+        *   publicly_queryable?: bool,
+        *   hierarchical?: bool,
+        *   show_ui?: bool,
+        *   show_in_menu?: bool,
+        *   show_in_nav_menus?: bool,
+        *   show_in_rest?: bool,
+        *   rest_base?: string,
+        *   rest_namespace?: string,
+        *   rest_controller_class?: string,
+        *   show_tagcloud?: bool,
+        *   show_in_quick_edit?: bool,
+        *   show_admin_column?: bool,
+        *   meta_box_cb?: bool|callable,
+        *   meta_box_sanitize_cb?: callable,
+        *   capabilities?: string[],
+        *   rewrite?: bool|array,
+        *   query_var?: string|bool,
+        *   update_count_callback?: callable,
+        *   default_term?: string|array,
+        *   sort?: bool,
+        *   args?: array,
+        *   _builtin?: bool,
+        * }
+        */
         $args = [
             'labels'                     => $labels,
             'hierarchical'               => false,
@@ -51,7 +79,7 @@ class ManufacturerTaxonomy extends CustomTaxonomy {
         ];
 
         register_taxonomy($slug,
-            [CollectablePostType::slug()], 
+            [CollectablePostType::Slug], 
             $args
         );
 
@@ -59,22 +87,16 @@ class ManufacturerTaxonomy extends CustomTaxonomy {
     }
 
     public function oneToOneConstraint(
-        $object_id,
-        $terms,
-        $tt_ids,
-        $taxonomy,
-        $append,
-        $old_tt_ids
+        int $object_id,
+        array $terms,
+        array $tt_ids,
+        string $taxonomy,
+        bool $append,
+        array $old_tt_ids
     ): void {
-        $slug = $this::slug();
+        $slug = $this::Slug;
         if ($taxonomy !== $slug || count($terms) <= 1 || $this->rollingBack) {
             return;
-        }
-        if ($this->rollingBack && count($old_tt_ids) > 1) {
-            wp_die(new WP_Error(
-                'curios_rollback_failure',
-                'Rollback would violate single term per post constraint'
-            ));
         }
 
         $this->rollingBack = true;
@@ -86,4 +108,5 @@ class ManufacturerTaxonomy extends CustomTaxonomy {
             'A post is limited to a single Manufacturer.'
         ));
     }
+
 }

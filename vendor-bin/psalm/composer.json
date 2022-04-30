@@ -1,6 +1,9 @@
 {
     "require-dev": {
-        "humanmade/psalm-plugin-wordpress": "^2.0",
+        "humanmade/psalm-plugin-wordpress": "dev-master",
         "php-standard-library/psalm-plugin": "^1.1"
+    },
+    "require": {
+        "vimeo/psalm": "^4.22"
     }
 }

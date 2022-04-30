@@ -42,7 +42,7 @@ class App extends Container implements ContainerInterface {
 
     public function getBasePath(): string
     {
-        return $this->baseBath;
+        return $this->basePath;
     }
 
 }

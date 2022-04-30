@@ -1,0 +1,3 @@
+{
+    "psalm.psalmScriptPath": "vendor/bin/psalm-language-server"
+}

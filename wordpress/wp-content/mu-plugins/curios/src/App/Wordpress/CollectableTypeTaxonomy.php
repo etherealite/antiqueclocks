@@ -7,14 +7,12 @@ use Curios\App\Wordpress\CollectablePostType;
 
 class CollectableTypeTaxonomy extends CustomTaxonomy {
 
-    public static function slug(): string
-    {
-        return 'curios_collect_type';
-    }
+    public const Slug = 'curios_collect_type';
+
 
     public function register(): void 
     {
-        $slug = $this::slug();
+        $slug = $this::Slug;
         $labels = [
             'name' => __( 'Types', 'curios' ),
             'singular_name' => __( 'Collectable Type', 'curios' ),
@@ -27,37 +25,75 @@ class CollectableTypeTaxonomy extends CustomTaxonomy {
             'add_new_item' => __( 'Add New Collectable Type', 'curios' ),
             'new_item_name' => __( 'New Collectable Type Name', 'curios' ),
         ];
-        // $rewrite = [
-        //     'slug'                       => $this::slug(),
-        //     'with_front'                 => false,
-        //     'hierarchical'               => false,
-        // ];
+
+        /**
+        * @var array{
+        *   labels?: string[],
+        *   description?: string,
+        *   public?: bool,
+        *   publicly_queryable?: bool,
+        *   hierarchical?: bool,
+        *   show_ui?: bool,
+        *   show_in_menu?: bool,
+        *   show_in_nav_menus?: bool,
+        *   show_in_rest?: bool,
+        *   rest_base?: string,
+        *   rest_namespace?: string,
+        *   rest_controller_class?: string,
+        *   show_tagcloud?: bool,
+        *   show_in_quick_edit?: bool,
+        *   show_admin_column?: bool,
+        *   meta_box_cb?: bool|callable,
+        *   meta_box_sanitize_cb?: callable,
+        *   capabilities?: string[],
+        *   rewrite?: bool|array,
+        *   query_var?: string|bool,
+        *   update_count_callback?: callable,
+        *   default_term?: string|array,
+        *   sort?: bool,
+        *   args?: array,
+        *   _builtin?: bool,
+        * }
+        */
         $args = [
             'labels'                     => $labels,
-            'default_term'               => [
-                'name' => 'Clock',
-                'slug' => 'clock',
-            ],
-            'hierarchical'               => false,
+            'description'                => 'a rare, unusual, or intriguing object.',
             'public'                     => false,
+            'publicly_queryable'         => true,
+            'hierarchical'               => false,
             'show_ui'                    => false,
-            'show_admin_column'          => true,
+            'show_in_menu'               => false,
             'show_in_nav_menus'          => true,
+            'show_in_rest'               => true,
+            'rest_base'                  => $slug,
+            'rest_namespace'             => null,
+            'rest_controller_class'      => null,
             'show_tagcloud'              => false,
+            'show_in_quick_edit'         => null,
+            'show_admin_column'          => true,
+            'meta_box_cb'               => null,
+            'meta_box_sanitize_cb'      => null,
+            'capabilities'              => [],
             'rewrite'                    => [
                 'slug' => $slug,
                 'ep_mask' => EP_NONE,
                 'pages' => false,
                 'walk_dirs' => false,
             ],
-            'show_in_rest'               => true,
-            'rest_base'                  => $slug,
+            'query_var'                 => null,
+            'update_count_callback'        => null,
+            'default_term'               => [
+                'name' => 'Clock',
+                'slug' => 'clock',
+            ],
+            'sort'                      => null,
+            'args'                      => null,
+            '_builtin'                  => false,
         ];
+
         register_taxonomy($slug,
-            [CollectablePostType::slug()], 
+            [CollectablePostType::Slug], 
             $args
         );
-
-        // $this->rewrites();
     }
 }

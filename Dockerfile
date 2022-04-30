@@ -207,6 +207,8 @@ FROM build-deps as builder
 COPY . /usr/build
 
 RUN set -eux; \
+    # TODO: should refactor this to use git archive as in...
+    # `git archive master | tar -x -C /somewhere/else`
     cd /usr/build; \
     git clean -f -d -X ./; \
     rm -rf .git; \

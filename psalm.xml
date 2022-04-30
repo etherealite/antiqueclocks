@@ -8,7 +8,7 @@
 >
     <projectFiles>
         <directory name="wordpress/wp-content/mu-plugins/curios"/>
-        <directory name="wordpress/wp-content/themes/antiqueclocks"/>
+        <!-- <directory name="wordpress/wp-content/themes/antiqueclocks"/> -->
         <file name="wordpress/wp-config.php"/>
         <file name="wordpress/wp-config-dev.php"/>
         <file name="wordpress/wp-content/mu-plugins/env-compatibility.php"/>

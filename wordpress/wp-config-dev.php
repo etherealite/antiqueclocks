@@ -20,4 +20,4 @@ if (! defined('WP_SITEURL')) {
 define('WP_DEBUG', true);
 define('SCRIPT_DEBUG', true);
 
-ini_set('assert.exception', 1);
+ini_set('assert.exception', '1');

@@ -49,9 +49,9 @@ class Object_Meta_Json_Storage {
 
         $this->hooks_registered = true;
 
-        $this->remove_hooks_func = function() use (  $hooks_to_remove ) {
+        $this->remove_hooks_func = function() use (  $hooks_to_remove ):void {
             foreach ($hooks_to_remove as $hook) {
-                remove_filter($hook[0], $hook[1], $hook[2], $hook[3]);
+                remove_filter($hook[0], $hook[1], $hook[2]);
             }
         };
     }
@@ -72,7 +72,9 @@ class Object_Meta_Json_Storage {
             return;
         }
 
+        /** @var non-empty-array<string, array> */ 
         $descriptor = get_registered_meta_keys( $object_type, $object_subtype )[$meta_key];
+
         $type = $descriptor['type'];
         assert( ($type === 'object' || $type == 'array') );
 

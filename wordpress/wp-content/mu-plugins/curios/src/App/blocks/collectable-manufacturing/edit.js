@@ -18,8 +18,10 @@ import { useBlockProps } from '@wordpress/block-editor';
 
  import { useEntityProp } from '@wordpress/core-data';
 
- import CreatableSelect  from 'react-select/creatable';
+ import Select  from 'react-select';
 
+
+ import Datetime from 'react-datetime';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -38,33 +40,6 @@ import './editor.scss';
  * @return {WPElement} Element to render.
  */
 export default function Edit({attributes, setAttributes}) {
-
-	
-	// const [meta, setMeta] = useEntityProp('postType', postType, 'meta');
-
-	
-
-
-	// const metaFieldValue = meta['collectable_sale']['realized_price'] || '';
-
-
-	// const updateMetaValue = (newValue) => {
-
-	// 	setMeta({...meta, collectable_sale: {realized_price: newValue}});
-	// };
-
-	
-	// return (
-	// 	<div {...useBlockProps()}>
-	// 		<TextControl
-	// 			label='Price'
-	// 			value={metaFieldValue}
-	// 			onChange={updateMetaValue}
-	// 		/>
-	// 	</div>
-	// );
-
-	
 
 	const post = useSelect(
 		(select) => select('core/editor').getCurrentPost(),
@@ -138,7 +113,7 @@ export default function Edit({attributes, setAttributes}) {
 		<div {...useBlockProps()}>
 			<h4>Manufacturer</h4>
 			<div>
-				<CreatableSelect
+				<Select
 					value={newVal ?? currentValue}
 					isLoading={isLoading}
 					placeholder='Select a manufacturer...'
@@ -147,6 +122,12 @@ export default function Edit({attributes, setAttributes}) {
 					onInputChange={newValue => setSearch(newValue)}
 				/>
 			</div>
+			<h4>Manufactured Date</h4>
+			<Datetime
+				utc={true}
+				timeFormat='hh:mm A'
+				// onChange={onDateChange}
+			/>
 		</div>
 	);
 

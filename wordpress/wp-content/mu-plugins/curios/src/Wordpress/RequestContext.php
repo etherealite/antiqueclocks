@@ -18,6 +18,8 @@ class RequestContext {
     public const CRON = 'cron';
     public const ADMIN_AJAX = 'admin_ajax';
 
+    private ?Closure $callback;
+
 
     public function __construct(?Closure $callback = null)
     {
@@ -31,16 +33,17 @@ class RequestContext {
 
     public function runHooked(): void
     {
-        if(!did_action(muplugins_loaded)){
+        if(!did_action('muplugins_loaded')){
             add_action('muplugins_loaded', [$this, 'process']);
         }
     }
 
     public function process(): void
     {
-        $callback = $this->callback;
         $context = $this->detect();
-        $callback($context);
+        if ($this->callback) {
+            ($this->callback)($context);
+        }   
     }
 
     public function detect(): string
@@ -55,9 +58,9 @@ class RequestContext {
         if (defined('REST_REQUEST')) {
             return $this::REST;
         }
-        if (wp_doing_ajax()) {
-            return $this::ADMIN_AJAX;
-        }
+        // if (wp_doing_ajax()) {
+        //     return $this::ADMIN_AJAX;
+        // }
         if (is_admin()) {
             return $this::ADMIN;
         }

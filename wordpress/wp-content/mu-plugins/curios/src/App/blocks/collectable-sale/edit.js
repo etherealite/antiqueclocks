@@ -112,7 +112,7 @@ export default function Edit({attributes, setAttributes}) {
 					disabled={sale.kind !== 'auction'}
 				/>
 			</div>
-			<h4>Date of Sale</h4>
+			<h4>Date of Price</h4>
 			<Datetime
 				value={moment(sale.date)}
 				utc={true}

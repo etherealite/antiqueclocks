@@ -18,11 +18,10 @@
  * Domain Path:       /languages
  */
 
- 
-(static function() {
-    $curios_plugin_path = plugin_dir_path(__FILE__);
+$curios_plugin_path = __DIR__;
+(static function() use ($curios_plugin_path) {
     if (!class_exists('\Curios\Bootstrap')) {
-        require $curios_plugin_path . 'src/server/Bootstrap.php';
+        require __DIR__ . '/src/Bootstrap.php';
     }
     $bootstrapper = new \Curios\Bootstrap();
     $bootstrapper->plugin_boot($curios_plugin_path,);
